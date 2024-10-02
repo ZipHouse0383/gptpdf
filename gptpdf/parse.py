@@ -91,7 +91,7 @@ def _adsorb_rects_to_rects(source_rects: List[BaseGeometry], target_rects: List[
     return new_source_rects, target_rects
 
 
-def _parse_rects(page: fitz.Page, page_index: int, detection: bool) -> List[Tuple[float, float, float, float]]:
+def _parse_rects(page: fitz.Page, page_index: int, output_dir: str, detection: bool) -> List[Tuple[float, float, float, float]]:
     """
     Parse drawings in the page and merge adjacent rectangles.
     """
@@ -148,7 +148,7 @@ def _parse_pdf_to_images(pdf_path: str, output_dir: str = './', detection: bool 
     for page_index, page in enumerate(pdf_document):
         logging.info(f'parse page: {page_index}')
         rect_images = []
-        rects = _parse_rects(page, page_index, detection)
+        rects = _parse_rects(page, page_index, output_dir, detection)
         for index, rect in enumerate(rects):
             fitz_rect = fitz.Rect(rect)
             # 保存页面为图片
