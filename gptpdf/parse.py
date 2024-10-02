@@ -96,7 +96,7 @@ def _parse_rects(page: fitz.Page, page_index: int, output_dir: str, detection: b
     Parse drawings in the page and merge adjacent rectangles.
     """
     if detection:  #判断使用目标检测还是使用PDF提供的信息
-        pix = page.get_pixmap(matrix=fitz.Matrix(4, 4))
+        pix = page.get_pixmap()
         name = f'{page_index}.png'
         pix.save(os.path.join(output_dir, name))
         merged_rects = [sg.box(*list(rect)[:4]) for rect in predict_rects("results_final.pth", name)[1]]
