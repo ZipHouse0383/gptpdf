@@ -137,7 +137,7 @@ def _parse_rects(page: fitz.Page, page_index: int, detection: bool) -> List[Tupl
     return [rect.bounds for rect in merged_rects]
 
 
-def _parse_pdf_to_images(pdf_path: str, output_dir: str = './', detecion: bool = False) -> List[Tuple[str, List[str]]]:
+def _parse_pdf_to_images(pdf_path: str, output_dir: str = './', detection: bool = False) -> List[Tuple[str, List[str]]]:
     """
     Parse PDF to images and save to output_dir.
     """
