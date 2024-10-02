@@ -9,6 +9,7 @@ import shapely.geometry as sg
 from shapely.geometry.base import BaseGeometry
 from shapely.validation import explain_validity
 import concurrent.futures
+from FasterRCNN.__main__ import predict_rects
 
 # This Default Prompt Using Chinese and could be changed to other languages.
 
@@ -90,12 +91,15 @@ def _adsorb_rects_to_rects(source_rects: List[BaseGeometry], target_rects: List[
     return new_source_rects, target_rects
 
 
-def _parse_rects(page: fitz.Page, detection: bool) -> List[Tuple[float, float, float, float]]:
+def _parse_rects(page: fitz.Page, page_index: int, detection: bool) -> List[Tuple[float, float, float, float]]:
     """
     Parse drawings in the page and merge adjacent rectangles.
     """
     if detection:  #判断使用目标检测还是使用PDF提供的信息
-        raise NotImplementedError
+        pix = page.get_pixmap(matrix=fitz.Matrix(4, 4))
+        name = f'{page_index}.png'
+        pix.save(os.path.join(output_dir, name))
+        merged_rects = [sg.box(*list(rect)[:4]) for rect in predict_rects("results_final.pth", name)[1]]
     else:
         # 提取画的内容
         drawings = page.get_drawings()
@@ -144,7 +148,7 @@ def _parse_pdf_to_images(pdf_path: str, output_dir: str = './', detecion: bool =
     for page_index, page in enumerate(pdf_document):
         logging.info(f'parse page: {page_index}')
         rect_images = []
-        rects = _parse_rects(page, detection)
+        rects = _parse_rects(page, page_index, detection)
         for index, rect in enumerate(rects):
             fitz_rect = fitz.Rect(rect)
             # 保存页面为图片
