@@ -235,7 +235,7 @@ def predict_rects(load_from, image_url):
   image_data, image_obj, _, _ = image.load_image(url = image_url, preprocessing = model.backbone.image_preprocessing_params, min_dimension_pixels = 600)
   image_data = t.from_numpy(image_data).unsqueeze(dim = 0).cuda()
   scored_boxes_by_class_index = model.predict(image_data = image_data, score_threshold = 0.7)
-  return scored_boxes
+  return scored_boxes_by_class_index
 
 def predict(model, image_data, image, show_image, output_path):
   image_data = t.from_numpy(image_data).unsqueeze(dim = 0).cuda()
